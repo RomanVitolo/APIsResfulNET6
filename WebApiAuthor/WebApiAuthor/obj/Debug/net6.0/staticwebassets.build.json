@@ -1,0 +1,39 @@
+{
+  "Version": 1,
+  "Hash": "JHhAO3ejlYdcCbtb8H+zk6c+sWXtNgFaQUmNSKe8h20=",
+  "Source": "WebApiAuthor",
+  "BasePath": "_content/WebApiAuthor",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "WebApiAuthor\\wwwroot",
+      "Source": "WebApiAuthor",
+      "ContentRoot": "C:\\Users\\frag-\\Documents\\WebApis-ASPNET\\WebApiAuthor\\WebApiAuthor\\wwwroot\\",
+      "BasePath": "_content/WebApiAuthor",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\frag-\\Documents\\WebApis-ASPNET\\WebApiAuthor\\WebApiAuthor\\wwwroot\\File 1.txt",
+      "SourceId": "WebApiAuthor",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\frag-\\Documents\\WebApis-ASPNET\\WebApiAuthor\\WebApiAuthor\\wwwroot\\",
+      "BasePath": "_content/WebApiAuthor",
+      "RelativePath": "File 1.txt",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\File 1.txt"
+    }
+  ]
+}
