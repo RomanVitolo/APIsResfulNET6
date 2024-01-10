@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using WebApiAuthor.Filters;
-using WebApiAuthor.Middlewares;
-using WebApiAuthor.Services;
+using WebApiAuthor.Middlewares;    
 
 namespace WebApiAuthor;
 
@@ -26,21 +25,8 @@ public class Startup
             (x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
         services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-        services.AddScoped<IService, ServiceA>(); // Es diferente en cada peticion (Dinamica)
-        //services.AddSingleton<IService, IService.ServiceA>();  //Compartimos la misma instancia, siempre
-        //services.AddScoped<IService, IService.ServiceA>();  //El tiempo de instancia aumenta(No compartimos instancia)
-
-        services.AddTransient<TransientService>();
-        services.AddScoped<ScopeService>();
-        services.AddSingleton<SingletonService>();
-
-        services.AddTransient<ActionFilter>();
-
-        services.AddHostedService<WriteToFile>();
-
-        services.AddResponseCaching();
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));     
+        
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);  //Sistema de Autentificacion
         
@@ -56,15 +42,8 @@ public class Startup
     //
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
     {
-        app.UseHttpLogger();
-            
-        app.Map("/route1", app =>
-        {
-            app.Run(async context =>
-            {
-                await context.Response.WriteAsync("Intercepting the pipeline");
-            });
-        });  
+        app.UseHttpLogger();  
+        
         
         if (env.IsDevelopment())
         {
@@ -78,9 +57,7 @@ public class Startup
 
         app.UseHttpsRedirection();
 
-        app.UseRouting();
-
-        app.UseResponseCaching();
+        app.UseRouting();    
 
         app.UseAuthorization();
 

@@ -8,66 +8,26 @@ using WebApiAuthor.Services;
 namespace WebApiAuthor.Controllers;
 
 [ApiController]
-[Route("api/authors")]  //This is the Path      
-//[Authorize]
+[Route("api/authors")]  //This is the Path     
+
 public class AuthorsController : ControllerBase
 {
-    private readonly ApplicationDbContext _context;
-    private readonly IService _service;
-    private readonly TransientService _transientService;
-    private readonly ScopeService _scopeService;
-    private readonly SingletonService _singletonService;
+    private readonly ApplicationDbContext _context;  
     private readonly ILogger<AuthorsController> _logger;
 
-    public AuthorsController(ApplicationDbContext context, IService service, TransientService transientService,
-        ScopeService scopeService, SingletonService singletonService, ILogger<AuthorsController> logger)
+    public AuthorsController(ApplicationDbContext context)
     {
-        _context = context;
-        _service = service;
-        _transientService = transientService;
-        _scopeService = scopeService;
-        _singletonService = singletonService;
-        _logger = logger;
-    }
-
-    [HttpGet("GUID")]
-    //[ResponseCache(Duration = 10)]      //Duracion de 10 segundos, se guarda en la memoria Cache.
-    [ServiceFilter(typeof(ActionFilter))]
-    public ActionResult GetGuids()
-    {
-        return Ok(new
-        {
-            TransientAuthorsController = _transientService.Guid,
-            Aservice_Transient = _service.GetTransient(),
-            ScopedAuthorsController = _scopeService.Guid,    
-            Aservice_Scoped = _service.GetScoped(),
-            SingletonAuthorsController = _singletonService.Guid,
-            Aservice_Singleton = _service.GetSingleton()
-            
-        });
-    }
+        _context = context;  
+    }    
     
-    [HttpGet] //api/authors
-    [HttpGet("listing")] //api/authors/listing
-    [HttpGet("/listing")]  //listing    
-    [ServiceFilter(typeof(ActionFilter))]
+    [HttpGet] //api/authors    
     public async Task<ActionResult<List<Author>>> GetAuthors()
-    {
-        //throw new NotImplementedException();
-        _logger.LogInformation("Getting the Authors");
-        _logger.LogWarning("A Test Message");
-        _service.DoTask();
-        return await _context.Authors.Include(x => x.Books).ToListAsync();
-    }
+    {     
+        return await _context.Authors.ToListAsync();
+    }               
 
-    [HttpGet("first")]    //api/authors/first
-    public async Task<ActionResult<Author>> FirstAuthor()
-    {
-        return await _context.Authors.FirstOrDefaultAsync();
-    }
-
-    [HttpGet("{id:int}/{param2?}")]
-    public async Task<ActionResult<Author>> GetById(int id, string param2)
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<Author>> GetById(int id)
     {
         var author = await _context.Authors.FirstOrDefaultAsync(x => x.Id == id);
         if (author == null)  
