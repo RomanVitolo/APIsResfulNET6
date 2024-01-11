@@ -35,6 +35,8 @@ public class Startup
         {
             c.SwaggerDoc("v1", new OpenApiInfo {Title = "WebApisCourse", Version = "v1"});
         });
+
+        services.AddAutoMapper(typeof(Startup));
     }
 
     

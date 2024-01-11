@@ -135,3 +135,5 @@ C:\Users\frag-\Documents\WebApis-ASPNET\APIsResfulNET6\WebApiAuthor\WebApiAuthor
 C:\Users\frag-\Documents\WebApis-ASPNET\APIsResfulNET6\WebApiAuthor\WebApiAuthor\obj\Debug\net6.0\WebApiAuthor.pdb
 C:\Users\frag-\Documents\WebApis-ASPNET\APIsResfulNET6\WebApiAuthor\WebApiAuthor\obj\Debug\net6.0\WebApiAuthor.genruntimeconfig.cache
 C:\Users\frag-\Documents\WebApis-ASPNET\APIsResfulNET6\WebApiAuthor\WebApiAuthor\obj\Debug\net6.0\ref\WebApiAuthor.dll
+C:\Users\frag-\Documents\WebApis-ASPNET\APIsResfulNET6\WebApiAuthor\WebApiAuthor\bin\Debug\net6.0\AutoMapper.dll
+C:\Users\frag-\Documents\WebApis-ASPNET\APIsResfulNET6\WebApiAuthor\WebApiAuthor\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
