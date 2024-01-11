@@ -1,6 +1,6 @@
 ﻿namespace WebApiAuthor.Entities;
 
-public class Comment
+public class Comment        //El comentario depende completamente del Libro (no al reves) 
 { 
       public int Id { get; set; }
       public string Content { get; set; }

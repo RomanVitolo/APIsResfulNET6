@@ -11,4 +11,5 @@ public class Book
     [StringLength(maximumLength: 250)]
     public string Title { get; set; }  
     public List<Comment> Comments { get; set; }
+    public List<AuthorBook> AuthorsBooks { get; set; }
 }
