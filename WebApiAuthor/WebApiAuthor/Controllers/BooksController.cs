@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAuthor.DTOs;
@@ -19,13 +20,15 @@ public class BooksController : ControllerBase
        _mapper = mapper;
    }
 
-   [HttpGet("{id:int}")]
+   [HttpGet("{id:int}", Name = "getBooks")]
    public async Task<ActionResult<BookDTOWithAuthors>> GetBook(int id)
    {
        var book = await _context.Books
            .Include(bookDB => bookDB.Comments)
            .Include(bookDB => bookDB.AuthorsBooks).ThenInclude(authorBookDB => authorBookDB.Author)
            .FirstOrDefaultAsync(x => x.Id == id);
+
+       if (book == null) return NotFound();
 
        book.AuthorsBooks = book.AuthorsBooks.OrderBy(x => x.Order).ToList();
        
@@ -46,15 +49,74 @@ public class BooksController : ControllerBase
 
        var book = _mapper.Map<Book>(bookCreationDto);
 
+       AssignAuthorsOrder(book);
+       
+       _context.Add(book);
+       await _context.SaveChangesAsync();
+
+       var bookDTO = _mapper.Map<BookDTO>(book);
+       return CreatedAtRoute("getBooks", new {id = book.Id},bookDTO);
+   }
+
+   [HttpPut("{id:int}")]
+   public async Task<ActionResult> Put(int id, BookCreationDTO bookCreationDto)
+   {
+       var bookDB = await _context.Books
+           .Include(x => x.AuthorsBooks)
+           .FirstOrDefaultAsync(x => x.Id == id);
+
+       if (bookDB == null) return NotFound();
+
+       bookDB = _mapper.Map(bookCreationDto, bookDB);
+       
+       AssignAuthorsOrder(bookDB);
+       
+       await _context.SaveChangesAsync();
+       return NoContent();
+   }
+
+   [HttpPatch("{id:int}")]
+   public async Task<ActionResult> Patch(int id, JsonPatchDocument<BookPatchDTO> patchDocument)
+   {
+       if (patchDocument == null) return BadRequest();
+
+       var bookDB = await _context.Books.FirstOrDefaultAsync(x => x.Id == id);
+
+       if (bookDB == null) return NotFound();
+
+       var bookDTO = _mapper.Map<BookPatchDTO>(bookDB);
+       
+       patchDocument.ApplyTo(bookDTO, ModelState);
+
+       var isValid = TryValidateModel(bookDTO);   
+       if (!isValid) return BadRequest(ModelState);
+
+       _mapper.Map(bookDB, bookDB);
+       
+       await _context.SaveChangesAsync();
+       return NoContent();
+   }
+   
+   [HttpDelete("{id:int}")]
+   public async Task<ActionResult> DeleteBook(int id)
+   {
+       var exists = await _context.Books.AnyAsync(x => x.Id == id);
+       if (!exists)    
+           return NotFound();
+
+       _context.Remove(new Book() {Id = id});
+       await _context.SaveChangesAsync();
+       return NoContent();             
+   }
+
+   private void AssignAuthorsOrder(Book book)
+   {
        if (book.AuthorsBooks != null)
        {
            for (int i = 0; i < book.AuthorsBooks.Count; i++)
            {
                book.AuthorsBooks[i].Order = i;
-           }  
-       }
-       _context.Add(book);
-       await _context.SaveChangesAsync();
-       return Ok();
-   }
+           }
+       }  
+   } 
 }

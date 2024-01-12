@@ -21,6 +21,7 @@ public class AutoMapperProfiles : Profile
         CreateMap<Book, BookDTOWithAuthors>()
             .ForMember(bookDTO => bookDTO.Authors, options =>
                 options.MapFrom(BookDTOAuthorsMap));
+        CreateMap<BookPatchDTO, Book>().ReverseMap();
         CreateMap<CommentCreationDTO, Comment>();
         CreateMap<Comment, CommentDTO>();
     }

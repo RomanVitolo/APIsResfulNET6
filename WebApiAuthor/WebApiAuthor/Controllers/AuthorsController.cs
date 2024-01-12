@@ -31,7 +31,7 @@ public class AuthorsController : ControllerBase
         return _mapper.Map<List<AuthorDTO>>(authors);
     }               
 
-    [HttpGet("{id:int}")]
+    [HttpGet("{id:int}", Name = "getAuthor")]
     public async Task<ActionResult<AuthorDTOWithBooks>> GetById(int id)
     {
         var author = await _dbContext.Authors
@@ -66,35 +66,35 @@ public class AuthorsController : ControllerBase
         
         _dbContext.Add(author);
         await _dbContext.SaveChangesAsync();
-        return Ok();
+
+        var authorDTO = _mapper.Map<AuthorDTO>(author);
+        return CreatedAtRoute("getAuthor", new { id = author.Id},authorDTO);
     }
 
     [HttpPut("{id:int}")] //api/authors/1
-    public async Task<ActionResult> PutAuthor(Author author, int id)
-    {
-        if (author.Id != id)
-        {
-            return BadRequest("The author id does not match the id of the URL");
-        }
-        
+    public async Task<ActionResult> PutAuthor(AuthorCreationDTO authorCreationDto, int id)
+    {       
         var exists = await _dbContext.Authors.AnyAsync(x => x.Id == id);
-        if (exists)
-            return NotFound();        
+        if (!exists)
+            return NotFound();
+
+        var author = _mapper.Map<Author>(authorCreationDto);
+        author.Id = id;
 
         _dbContext.Update(author);
         await _dbContext.SaveChangesAsync();
-        return Ok();
+        return NoContent();
     }
 
     [HttpDelete("{id:int}")] //api/authors/2
     public async Task<ActionResult> DeleteAuthor(int id)
     {
         var exists = await _dbContext.Authors.AnyAsync(x => x.Id == id);
-        if (exists)    
+        if (!exists)    
             return NotFound();
 
         _dbContext.Remove(new Author() {Id = id});
         await _dbContext.SaveChangesAsync();
-        return Ok();             
+        return NoContent();             
     }
 }
