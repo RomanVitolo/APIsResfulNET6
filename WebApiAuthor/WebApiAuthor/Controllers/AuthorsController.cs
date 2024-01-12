@@ -32,13 +32,16 @@ public class AuthorsController : ControllerBase
     }               
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<AuthorDTO>> GetById(int id)
+    public async Task<ActionResult<AuthorDTOWithBooks>> GetById(int id)
     {
-        var author = await _dbContext.Authors.FirstOrDefaultAsync(authorBD => authorBD.Id == id);
+        var author = await _dbContext.Authors
+            .Include(authorDB => authorDB.AuthorsBooks)
+            .ThenInclude(authorBookDB => authorBookDB.Book)
+            .FirstOrDefaultAsync(authorBD => authorBD.Id == id);
         if (author == null)  
             return NotFound();
 
-        return _mapper.Map<AuthorDTO>(author);      
+        return _mapper.Map<AuthorDTOWithBooks>(author);      
     }
     
     [HttpGet("{name}")]

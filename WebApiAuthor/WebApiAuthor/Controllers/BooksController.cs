@@ -20,7 +20,7 @@ public class BooksController : ControllerBase
    }
 
    [HttpGet("{id:int}")]
-   public async Task<ActionResult<BookDTO>> GetBook(int id)
+   public async Task<ActionResult<BookDTOWithAuthors>> GetBook(int id)
    {
        var book = await _context.Books
            .Include(bookDB => bookDB.Comments)
@@ -29,7 +29,7 @@ public class BooksController : ControllerBase
 
        book.AuthorsBooks = book.AuthorsBooks.OrderBy(x => x.Order).ToList();
        
-       return _mapper.Map<BookDTO>(book);
+       return _mapper.Map<BookDTOWithAuthors>(book);
    }
 
    [HttpPost]

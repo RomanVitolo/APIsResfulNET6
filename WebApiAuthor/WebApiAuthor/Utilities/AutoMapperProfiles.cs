@@ -10,15 +10,39 @@ public class AutoMapperProfiles : Profile
     {
         CreateMap<AuthorCreationDTO, Author>();
         CreateMap<Author, AuthorDTO>();
+        CreateMap<Author, AuthorDTOWithBooks>()
+            .ForMember(authorDTO => authorDTO.Books, options =>
+                options.MapFrom(AuthorDTOBooksMAp));
         CreateMap<BookCreationDTO, Book>().
             ForMember(book => book.AuthorsBooks,
                 options => options.MapFrom(AuthorBooksMap));
-        
-        CreateMap<Book, BookDTO>()
+
+        CreateMap<Book, BookDTO>();
+        CreateMap<Book, BookDTOWithAuthors>()
             .ForMember(bookDTO => bookDTO.Authors, options =>
                 options.MapFrom(BookDTOAuthorsMap));
         CreateMap<CommentCreationDTO, Comment>();
         CreateMap<Comment, CommentDTO>();
+    }
+
+    private List<BookDTO> AuthorDTOBooksMAp(Author author, AuthorDTO authorDto)
+    {
+        var result = new List<BookDTO>();
+
+        if (author.AuthorsBooks == null) 
+            return result;
+
+        foreach (var authorBook in author.AuthorsBooks)
+        {
+             result.Add(new BookDTO()
+             {
+                 Id = authorBook.BookId,
+                 Title = authorBook.Book.Title
+             });
+        }
+        
+        
+        return result;
     }
 
     private List<AuthorBook> AuthorBooksMap(BookCreationDTO bookCreationDto, Book book)
