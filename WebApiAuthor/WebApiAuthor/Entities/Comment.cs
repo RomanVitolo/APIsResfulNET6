@@ -1,4 +1,6 @@
-﻿namespace WebApiAuthor.Entities;
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace WebApiAuthor.Entities;
 
 public class Comment        //El comentario depende completamente del Libro (no al reves) 
 { 
@@ -6,4 +8,6 @@ public class Comment        //El comentario depende completamente del Libro (no 
       public string Content { get; set; }
       public int BookId { get; set; }
       public Book Book { get; set; }
+      public string UserId { get; set; }
+      public IdentityUser User { get; set; }
 }

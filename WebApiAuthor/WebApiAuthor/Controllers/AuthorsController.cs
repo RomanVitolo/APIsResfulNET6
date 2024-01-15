@@ -10,7 +10,7 @@ namespace WebApiAuthor.Controllers;
 
 [ApiController]
 [Route("api/authors")]  //This is the Path     
-
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class AuthorsController : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext;
@@ -25,15 +25,15 @@ public class AuthorsController : ControllerBase
         _configuration = configuration;
     }
 
-    [HttpGet("Configurations")]
+    /*[HttpGet("Configurations")]
     public ActionResult<string> GetConfigurations()
     {
         return _configuration["lastName"];
-    }
+    }*/
     
     
     [HttpGet] //api/authors 
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [AllowAnonymous]
     public async Task<ActionResult<List<AuthorDTO>>> GetAuthors()
     {     
         var authors = await _dbContext.Authors.ToListAsync();

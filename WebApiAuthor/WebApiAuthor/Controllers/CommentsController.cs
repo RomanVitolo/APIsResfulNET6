@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAuthor.DTOs;
@@ -7,16 +10,18 @@ using WebApiAuthor.Entities;
 namespace WebApiAuthor.Controllers;
 
 [ApiController]
-[Route("api/books/{bookId:int}/comments")]
+[Route("api/books/{bookId:int}/comments")]  
 public class CommentsController : ControllerBase
 {
       private readonly ApplicationDbContext _dbContext;
       private readonly IMapper _mapper;
+      private readonly UserManager<IdentityUser> _userManager;
 
-      public CommentsController(ApplicationDbContext dbContext, IMapper mapper)
+      public CommentsController(ApplicationDbContext dbContext, IMapper mapper, UserManager<IdentityUser> userManager)
       {
             _dbContext = dbContext;
             _mapper = mapper;
+            _userManager = userManager;
       }         
 
       [HttpGet]
@@ -45,14 +50,21 @@ public class CommentsController : ControllerBase
       
 
       [HttpPost]
+      [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
       public async Task<ActionResult> Post(int bookId, CommentCreationDTO commentCreationDto)
       {
+          var emailClaim = HttpContext.User.Claims.Where(claim => claim.Type == "email").FirstOrDefault();  
+          var email = emailClaim.Value;
+          var user = await _userManager.FindByEmailAsync(email);
+          var userId = user.Id;   
+
           var bookExists = await _dbContext.Books.AnyAsync(bookDb => bookDb.Id == bookId);
 
           if (!bookExists) return NotFound();
 
           var comment = _mapper.Map <Comment>(commentCreationDto);
           comment.BookId = bookId;
+          comment.UserId = userId;
           _dbContext.Add(comment);
           await _dbContext.SaveChangesAsync();
 
