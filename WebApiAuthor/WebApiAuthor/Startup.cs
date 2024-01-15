@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using WebApiAuthor.Filters;
@@ -37,6 +38,10 @@ public class Startup
         });
 
         services.AddAutoMapper(typeof(Startup));
+
+        services.AddIdentity<IdentityUser, IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
     }
 
     
@@ -49,12 +54,14 @@ public class Startup
         
         if (env.IsDevelopment())
         {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint
-                ("/swagger/v1/swagger.json", "WebApisCourse v1"));
+            app.UseDeveloperExceptionPage();
+            
         }
-        
+
+        app.UseSwagger();
+        app.UseSwaggerUI(c => c.SwaggerEndpoint
+            ("/swagger/v1/swagger.json", "WebApisCourse v1"));
+
         //Al sacar del IF la linea 49, podriamos tenerlo en produccion
 
         app.UseHttpsRedirection();

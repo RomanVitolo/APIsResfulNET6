@@ -141,3 +141,10 @@ C:\Users\frag-\Documents\WebApis-ASPNET\APIsResfulNET6\WebApiAuthor\WebApiAuthor
 C:\Users\frag-\Documents\WebApis-ASPNET\APIsResfulNET6\WebApiAuthor\WebApiAuthor\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 C:\Users\frag-\Documents\WebApis-ASPNET\APIsResfulNET6\WebApiAuthor\WebApiAuthor\bin\Debug\net6.0\Newtonsoft.Json.dll
 C:\Users\frag-\Documents\WebApis-ASPNET\APIsResfulNET6\WebApiAuthor\WebApiAuthor\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll
+C:\Users\frag-\Documents\WebApis-ASPNET\APIsResfulNET6\WebApiAuthor\WebApiAuthor\obj\Debug\net6.0\WebApiAuthor.Properties.Resources.resources
+C:\Users\frag-\Documents\WebApis-ASPNET\APIsResfulNET6\WebApiAuthor\WebApiAuthor\obj\Debug\net6.0\WebApiAuthor.csproj.GenerateResource.cache
+C:\Users\frag-\Documents\WebApis-ASPNET\APIsResfulNET6\WebApiAuthor\WebApiAuthor\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\frag-\Documents\WebApis-ASPNET\APIsResfulNET6\WebApiAuthor\WebApiAuthor\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\frag-\Documents\WebApis-ASPNET\APIsResfulNET6\WebApiAuthor\WebApiAuthor\bin\Debug\net6.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\frag-\Documents\WebApis-ASPNET\APIsResfulNET6\WebApiAuthor\WebApiAuthor\bin\Debug\net6.0\Microsoft.Extensions.Identity.Core.dll
+C:\Users\frag-\Documents\WebApis-ASPNET\APIsResfulNET6\WebApiAuthor\WebApiAuthor\bin\Debug\net6.0\Microsoft.Extensions.Identity.Stores.dll

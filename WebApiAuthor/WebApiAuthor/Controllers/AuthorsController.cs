@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAuthor.DTOs;
 using WebApiAuthor.Entities;
-using WebApiAuthor.Filters;
-using WebApiAuthor.Services;
 
 namespace WebApiAuthor.Controllers;
 
@@ -16,15 +15,25 @@ public class AuthorsController : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
+    private readonly IConfiguration _configuration;
     private readonly ILogger<AuthorsController> _logger;
 
-    public AuthorsController(ApplicationDbContext dbContext, IMapper mapper)
+    public AuthorsController(ApplicationDbContext dbContext, IMapper mapper, IConfiguration configuration)
     {
         _dbContext = dbContext;
         _mapper = mapper;
-    }    
+        _configuration = configuration;
+    }
+
+    [HttpGet("Configurations")]
+    public ActionResult<string> GetConfigurations()
+    {
+        return _configuration["lastName"];
+    }
     
-    [HttpGet] //api/authors    
+    
+    [HttpGet] //api/authors 
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult<List<AuthorDTO>>> GetAuthors()
     {     
         var authors = await _dbContext.Authors.ToListAsync();
