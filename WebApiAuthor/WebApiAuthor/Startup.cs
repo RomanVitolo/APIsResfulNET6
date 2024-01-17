@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using WebApiAuthor.Filters;
-using WebApiAuthor.Middlewares;    
+using WebApiAuthor.Middlewares;
+using WebApiAuthor.Services;
 
 namespace WebApiAuthor;
 
@@ -74,14 +75,33 @@ public class Startup
 
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();     
+                .AddDefaultTokenProviders();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("IsAdmin", policy =>
+                    policy.RequireClaim("IsAdmin"));   
+                options.AddPolicy("IsSeller", policy =>
+                    policy.RequireClaim("IsSeller"));
+            });
+
+            services.AddDataProtection();
+
+            services.AddTransient<HashService>();
+
+            /*services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins("https://apirequest.io").AllowAnyMethod().AllowAnyHeader();
+                });
+            });*/
     }
 
     //Todos los Middleware, se ejecutan en orden. Los middleware son los que dicen "Use"
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
-            app.UseHttpLogger();
-
+            app.UseHttpLogger();           
 
             if (env.IsDevelopment())
             {
@@ -98,6 +118,8 @@ public class Startup
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthorization();
 
