@@ -35,7 +35,7 @@ public class BooksController : ControllerBase
        return _mapper.Map<BookDTOWithAuthors>(book);
    }
 
-   [HttpPost]
+   [HttpPost(Name = "createBook")]
    public async Task<ActionResult> Post(BookCreationDTO bookCreationDto)
    {
        if (bookCreationDto.AuthorsIds == null) return BadRequest("Cannot create a book without Authors");   
@@ -58,7 +58,7 @@ public class BooksController : ControllerBase
        return CreatedAtRoute("getBooks", new {id = book.Id},bookDTO);
    }
 
-   [HttpPut("{id:int}")]
+   [HttpPut("{id:int}", Name = "refreshBook")]
    public async Task<ActionResult> Put(int id, BookCreationDTO bookCreationDto)
    {
        var bookDB = await _context.Books
@@ -75,7 +75,7 @@ public class BooksController : ControllerBase
        return NoContent();
    }
 
-   [HttpPatch("{id:int}")]
+   [HttpPatch("{id:int}", Name = "bookPatch")]
    public async Task<ActionResult> Patch(int id, JsonPatchDocument<BookPatchDTO> patchDocument)
    {
        if (patchDocument == null) return BadRequest();
@@ -97,7 +97,7 @@ public class BooksController : ControllerBase
        return NoContent();
    }
    
-   [HttpDelete("{id:int}")]
+   [HttpDelete("{id:int}", Name = "deleteBook")]
    public async Task<ActionResult> DeleteBook(int id)
    {
        var exists = await _context.Books.AnyAsync(x => x.Id == id);

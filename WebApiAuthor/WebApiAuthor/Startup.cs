@@ -3,12 +3,14 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using WebApiAuthor.Filters;
 using WebApiAuthor.Middlewares;
 using WebApiAuthor.Services;
+using WebApiAuthor.Utilities;
 
 namespace WebApiAuthor;
 
@@ -46,6 +48,7 @@ public class Startup
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo {Title = "WebApisCourse", Version = "v1"});
+            c.OperationFilter<AddHATEOASParameters>();
 
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
@@ -89,13 +92,17 @@ public class Startup
 
             services.AddTransient<HashService>();
 
-            /*services.AddCors(options =>
+            services.AddCors(options =>
             {
                 options.AddDefaultPolicy(builder =>
                 {
                     builder.WithOrigins("https://apirequest.io").AllowAnyMethod().AllowAnyHeader();
                 });
-            });*/
+            });
+
+            services.AddTransient<LinksGenerator>();
+            services.AddTransient<HATEOASAuthorFilterAttribute>();
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
     }
 
     //Todos los Middleware, se ejecutan en orden. Los middleware son los que dicen "Use"

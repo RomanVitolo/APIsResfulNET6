@@ -85,7 +85,7 @@ public class AccountsController : ControllerBase
       });
    }
 
-   [HttpPost("register")] //api/accounts/register
+   [HttpPost("register", Name = "userRegister")] //api/accounts/register
    public async Task<ActionResult<AuthenticationResponse>> Register(UserCredentials userCredentials)
    {
        var user = new IdentityUser
@@ -106,7 +106,7 @@ public class AccountsController : ControllerBase
        }                                      
    }
 
-   [HttpPost("login")]
+   [HttpPost("login", Name = "userLogin")]
    public async Task<ActionResult<AuthenticationResponse>> Login(UserCredentials userCredentials)
    {
       var result = await _signInManager.PasswordSignInAsync(userCredentials.Email, userCredentials.Password,
@@ -116,7 +116,7 @@ public class AccountsController : ControllerBase
       else return BadRequest("Incorrect Login");       
    }
 
-   [HttpGet("RenovateToken")]
+   [HttpGet("RenovateToken", Name = "renovateToken")]
    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
    public async Task<ActionResult<AuthenticationResponse>> Renovate()
    {
@@ -158,7 +158,7 @@ public class AccountsController : ControllerBase
       };
    }
 
-   [HttpPost("CreateAdmin")]
+   [HttpPost("CreateAdmin", Name = "createAdmin")]
    public async Task<ActionResult> CreateAdmin(EditAdminDTO editAdminDto)
    {
       var user = await _userManager.FindByEmailAsync(editAdminDto.Email);
@@ -166,7 +166,7 @@ public class AccountsController : ControllerBase
       return NoContent();
    }
    
-   [HttpPost("RemoveAdmin")]
+   [HttpPost("RemoveAdmin", Name = "removeAdmin")]
    public async Task<ActionResult> RemoveAdmin(EditAdminDTO editAdminDto)
    {
       var user = await _userManager.FindByEmailAsync(editAdminDto.Email);

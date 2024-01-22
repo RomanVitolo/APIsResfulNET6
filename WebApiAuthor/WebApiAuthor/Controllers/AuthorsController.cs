@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAuthor.DTOs;
 using WebApiAuthor.Entities;
+using WebApiAuthor.Utilities;
 
 namespace WebApiAuthor.Controllers;
 
@@ -15,14 +16,14 @@ public class AuthorsController : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
-    private readonly IConfiguration _configuration;
+    private readonly IAuthorizationService _authorizationService;
     private readonly ILogger<AuthorsController> _logger;
 
-    public AuthorsController(ApplicationDbContext dbContext, IMapper mapper, IConfiguration configuration)
+    public AuthorsController(ApplicationDbContext dbContext, IMapper mapper, IAuthorizationService authorizationService)
     {
         _dbContext = dbContext;
         _mapper = mapper;
-        _configuration = configuration;
+        _authorizationService = authorizationService;
     }
 
     /*[HttpGet("Configurations")]
@@ -32,28 +33,34 @@ public class AuthorsController : ControllerBase
     }*/
     
     
-    [HttpGet] //api/authors 
+    [HttpGet(Name = "getAuthors")] //api/authors 
     [AllowAnonymous]
-    public async Task<ActionResult<List<AuthorDTO>>> GetAuthors()
+    [ServiceFilter(typeof(HATEOASAuthorFilterAttribute))]
+    public async Task<ActionResult<List<AuthorDTO>>> GetAuthors() //[FromHeader] string includeHATEOAS)
     {     
         var authors = await _dbContext.Authors.ToListAsync();
-        return _mapper.Map<List<AuthorDTO>>(authors);
+        return _mapper.Map<List<AuthorDTO>>(authors);   
     }               
 
     [HttpGet("{id:int}", Name = "getAuthor")]
-    public async Task<ActionResult<AuthorDTOWithBooks>> GetById(int id)
+    [AllowAnonymous]   
+    [ServiceFilter(typeof(HATEOASAuthorFilterAttribute))]
+    public async Task<ActionResult<AuthorDTOWithBooks>> GetById(int id) //, [FromHeader] string includeHATEOAS)
     {
         var author = await _dbContext.Authors
             .Include(authorDB => authorDB.AuthorsBooks)
             .ThenInclude(authorBookDB => authorBookDB.Book)
             .FirstOrDefaultAsync(authorBD => authorBD.Id == id);
+        
         if (author == null)  
             return NotFound();
 
-        return _mapper.Map<AuthorDTOWithBooks>(author);      
-    }
+        var dto = _mapper.Map<AuthorDTOWithBooks>(author);       
+        return dto;
+    }         
     
-    [HttpGet("{name}")]
+    
+    [HttpGet("{name}", Name = "getAuthorByName")]
     public async Task<ActionResult<List<AuthorDTO>>> GetByName([FromRoute] string name)
     {
         var authors = await _dbContext.Authors.Where
@@ -62,7 +69,7 @@ public class AuthorsController : ControllerBase
         return _mapper.Map<List<AuthorDTO>>(authors);
     }
 
-    [HttpPost]
+    [HttpPost(Name = "createAuthor")]
     public async Task<ActionResult> PostAuthors([FromBody] AuthorCreationDTO authorCreationDto)  //Mostrar esta propiedad no es lo correcto
     {
         var existsSameName = await _dbContext.Authors.AnyAsync(x => x.Name == authorCreationDto.Name);
@@ -80,7 +87,7 @@ public class AuthorsController : ControllerBase
         return CreatedAtRoute("getAuthor", new { id = author.Id},authorDTO);
     }
 
-    [HttpPut("{id:int}")] //api/authors/1
+    [HttpPut("{id:int}", Name = "refreshAuthor")] //api/authors/1
     public async Task<ActionResult> PutAuthor(AuthorCreationDTO authorCreationDto, int id)
     {       
         var exists = await _dbContext.Authors.AnyAsync(x => x.Id == id);
@@ -95,7 +102,7 @@ public class AuthorsController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id:int}")] //api/authors/2
+    [HttpDelete("{id:int}", Name = "deleteAuthor")] //api/authors/2
     public async Task<ActionResult> DeleteAuthor(int id)
     {
         var exists = await _dbContext.Authors.AnyAsync(x => x.Id == id);
