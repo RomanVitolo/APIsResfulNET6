@@ -7,11 +7,14 @@ using WebApiAuthor.DTOs;
 using WebApiAuthor.Entities;
 using WebApiAuthor.Utilities;
 
-namespace WebApiAuthor.Controllers;
+namespace WebApiAuthor.Controllers.V1;
 
 [ApiController]
-[Route("api/authors")]  //This is the Path     
+//[Route("api/v1/authors")]  //This is the Path     
+[Route("api/authors")] 
+[AttributeHeader("x-version", "1")]
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "IsAdmin")]
+//[ApiConventionType(typeof(DefaultApiConventions))]
 public class AuthorsController : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext;
@@ -31,20 +34,23 @@ public class AuthorsController : ControllerBase
     {
         return _configuration["lastName"];
     }*/
-    
-    
-    [HttpGet(Name = "getAuthors")] //api/authors 
+                                       
+    [HttpGet(Name = "getAuthorsv1")] //api/authors 
     [AllowAnonymous]
     [ServiceFilter(typeof(HATEOASAuthorFilterAttribute))]
-    public async Task<ActionResult<List<AuthorDTO>>> GetAuthors() //[FromHeader] string includeHATEOAS)
-    {     
-        var authors = await _dbContext.Authors.ToListAsync();
+    public async Task<ActionResult<List<AuthorDTO>>> GetAuthors([FromQuery] PageDTO pageDto) //[FromHeader] string includeHATEOAS)
+    {
+        var queryable = _dbContext.Authors.AsQueryable();
+        await HttpContext.InsertPagingParametersInHeader(queryable);
+        var authors = await queryable.OrderBy(author => author.Name).Page(pageDto).ToListAsync();
         return _mapper.Map<List<AuthorDTO>>(authors);   
     }               
 
-    [HttpGet("{id:int}", Name = "getAuthor")]
+    [HttpGet("{id:int}", Name = "getAuthorv1")]
     [AllowAnonymous]   
     [ServiceFilter(typeof(HATEOASAuthorFilterAttribute))]
+    [ProducesResponseType(404)]  //Puedo documentar las respuestas que mi Web Api puede retornar
+    [ProducesResponseType(200)]
     public async Task<ActionResult<AuthorDTOWithBooks>> GetById(int id) //, [FromHeader] string includeHATEOAS)
     {
         var author = await _dbContext.Authors
@@ -60,7 +66,7 @@ public class AuthorsController : ControllerBase
     }         
     
     
-    [HttpGet("{name}", Name = "getAuthorByName")]
+    [HttpGet("{name}", Name = "getAuthorByNamev1")]
     public async Task<ActionResult<List<AuthorDTO>>> GetByName([FromRoute] string name)
     {
         var authors = await _dbContext.Authors.Where
@@ -69,7 +75,7 @@ public class AuthorsController : ControllerBase
         return _mapper.Map<List<AuthorDTO>>(authors);
     }
 
-    [HttpPost(Name = "createAuthor")]
+    [HttpPost(Name = "createAuthorv1")]
     public async Task<ActionResult> PostAuthors([FromBody] AuthorCreationDTO authorCreationDto)  //Mostrar esta propiedad no es lo correcto
     {
         var existsSameName = await _dbContext.Authors.AnyAsync(x => x.Name == authorCreationDto.Name);
@@ -84,10 +90,10 @@ public class AuthorsController : ControllerBase
         await _dbContext.SaveChangesAsync();
 
         var authorDTO = _mapper.Map<AuthorDTO>(author);
-        return CreatedAtRoute("getAuthor", new { id = author.Id},authorDTO);
+        return CreatedAtRoute("getAuthorv1", new { id = author.Id},authorDTO);
     }
 
-    [HttpPut("{id:int}", Name = "refreshAuthor")] //api/authors/1
+    [HttpPut("{id:int}", Name = "refreshAuthorv1")] //api/authors/1
     public async Task<ActionResult> PutAuthor(AuthorCreationDTO authorCreationDto, int id)
     {       
         var exists = await _dbContext.Authors.AnyAsync(x => x.Id == id);
@@ -102,7 +108,13 @@ public class AuthorsController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id:int}", Name = "deleteAuthor")] //api/authors/2
+    /// <summary>
+    ///  Delete an Author
+    /// </summary>
+    /// <param name="id">Author ID to Delete</param>
+    /// <returns></returns>
+    
+    [HttpDelete("{id:int}", Name = "deleteAuthorv1")] //api/authors/2
     public async Task<ActionResult> DeleteAuthor(int id)
     {
         var exists = await _dbContext.Authors.AnyAsync(x => x.Id == id);

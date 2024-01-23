@@ -148,3 +148,5 @@ C:\Users\frag-\Documents\WebApis-ASPNET\APIsResfulNET6\WebApiAuthor\WebApiAuthor
 C:\Users\frag-\Documents\WebApis-ASPNET\APIsResfulNET6\WebApiAuthor\WebApiAuthor\bin\Debug\net6.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 C:\Users\frag-\Documents\WebApis-ASPNET\APIsResfulNET6\WebApiAuthor\WebApiAuthor\bin\Debug\net6.0\Microsoft.Extensions.Identity.Core.dll
 C:\Users\frag-\Documents\WebApis-ASPNET\APIsResfulNET6\WebApiAuthor\WebApiAuthor\bin\Debug\net6.0\Microsoft.Extensions.Identity.Stores.dll
+C:\Users\frag-\Documents\WebApis-ASPNET\APIsResfulNET6\WebApiAuthor\WebApiAuthor\bin\Debug\net6.0\WebApiAuthor.xml
+C:\Users\frag-\Documents\WebApis-ASPNET\APIsResfulNET6\WebApiAuthor\WebApiAuthor\obj\Debug\net6.0\WebApiAuthor.xml

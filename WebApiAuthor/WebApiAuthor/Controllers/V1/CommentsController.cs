@@ -6,11 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAuthor.DTOs;
 using WebApiAuthor.Entities;
+using WebApiAuthor.Utilities;
 
-namespace WebApiAuthor.Controllers;
+namespace WebApiAuthor.Controllers.V1;
 
 [ApiController]
-[Route("api/books/{bookId:int}/comments")]  
+[Route("api/v1/books/{bookId:int}/comments")]  
 public class CommentsController : ControllerBase
 {
       private readonly ApplicationDbContext _dbContext;
@@ -25,14 +26,18 @@ public class CommentsController : ControllerBase
       }         
 
       [HttpGet(Name = "getBookComments")]
-      public async Task<ActionResult<List<CommentDTO>>> Get(int bookId)
+      public async Task<ActionResult<List<CommentDTO>>> Get(int bookId, [FromQuery] PageDTO pageDto)
       {
           var bookExists = await _dbContext.Books.AnyAsync(bookDb => bookDb.Id == bookId);
 
           if (!bookExists) return NotFound();
+
+          var queryable = _dbContext.Comments.Where(
+              commentDB => commentDB.BookId == bookId).AsQueryable();
+          await HttpContext.InsertPagingParametersInHeader(queryable);
           
-          var comments = await _dbContext.Comments.Where(
-              commentDB => commentDB.BookId == bookId).ToListAsync();
+          var comments = await queryable.OrderBy(comment => comment.Id)
+              .Page(pageDto).ToListAsync();
 
           return _mapper.Map<List<CommentDTO>>(comments);
       }

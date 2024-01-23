@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using WebApiAuthor.DTOs;
 using WebApiAuthor.Entities;
 
-namespace WebApiAuthor.Controllers;
+namespace WebApiAuthor.Controllers.V1;
 
 [ApiController]
-[Route("api/Books")]
+[Route("api/v1/Books")]
 public class BooksController : ControllerBase
 {
    private readonly ApplicationDbContext _context;

@@ -1,8 +1,10 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -10,10 +12,10 @@ using Microsoft.OpenApi.Models;
 using WebApiAuthor.Filters;
 using WebApiAuthor.Middlewares;
 using WebApiAuthor.Services;
-using WebApiAuthor.Utilities;
+using WebApiAuthor.Utilities;                                            
 
-namespace WebApiAuthor;
-
+[assembly: ApiConventionType(typeof(DefaultApiConventions))]
+namespace WebApiAuthor;     
 public class Startup
 {
     public Startup(IConfiguration configuration)
@@ -26,7 +28,11 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddControllers(options => { options.Filters.Add(typeof(ExceptionFilter)); }).AddJsonOptions
+        services.AddControllers(options =>
+        {
+            options.Filters.Add(typeof(ExceptionFilter)); 
+            options.Conventions.Add(new SwaggerGroupVersion());
+        }).AddJsonOptions
             (x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles).AddNewtonsoftJson();
 
         services.AddDbContext<ApplicationDbContext>(options =>
@@ -47,8 +53,23 @@ public class Startup
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo {Title = "WebApisCourse", Version = "v1"});
+            c.SwaggerDoc("v1", new OpenApiInfo {Title = "WebApisCourse",
+                Version = "v1", 
+                Description = "Authors and Books Web Api",
+                Contact = new OpenApiContact
+                {
+                    Email = "roman@7r1ck.com",
+                    Name = "Roman Vitolo",
+                    Url = new Uri("http://www.trickgs.com")
+                },
+                License = new OpenApiLicense
+                {
+                    Name = "License: MIT"
+                }
+            });
+            c.SwaggerDoc("v2", new OpenApiInfo {Title = "WebApisCourse", Version = "v2"});
             c.OperationFilter<AddHATEOASParameters>();
+            c.OperationFilter<AddVersionParameters>();
 
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
@@ -73,6 +94,9 @@ public class Startup
                     new string[] { }
                 },
             });
+            var XMLFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var XMLPath = Path.Combine(AppContext.BaseDirectory, XMLFile);
+            c.IncludeXmlComments(XMLPath);
         });  
             services.AddAutoMapper(typeof(Startup));
 
@@ -96,7 +120,8 @@ public class Startup
             {
                 options.AddDefaultPolicy(builder =>
                 {
-                    builder.WithOrigins("https://apirequest.io").AllowAnyMethod().AllowAnyHeader();
+                    builder.WithOrigins("https://apirequest.io").AllowAnyMethod().AllowAnyHeader()
+                        .WithExposedHeaders(new string[] {"totalAmountRecords"});
                 });
             });
 
@@ -117,8 +142,13 @@ public class Startup
             }
 
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint
-                ("/swagger/v1/swagger.json", "WebApisCourse v1"));
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint
+                    ("/swagger/v1/swagger.json", "WebApisCourse v1");
+                c.SwaggerEndpoint
+                    ("/swagger/v2/swagger.json", "WebApisCourse v2");
+            });
 
             //Al sacar del IF la linea 49, podriamos tenerlo en produccion
 
