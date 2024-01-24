@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "GA19Y44Vw5IeZkMb6aGWa96JOt4PMhax/lJ44VE/vp8BJDj8Izv408FbLd1j8zgs492BhFCi0REAA6kQsm7kQw==",
+  "dgSpecHash": "cQ3HzEycThhyVlrLrtUkSAaoBXKWqoYHJ4JcvtRcGvf3xMeLud7uBePgxwAKh0Gul3qQR2hr9VBtEiSvnzC6VA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\frag-\\Documents\\WebApis-ASPNET\\APIsResfulNET6\\WebApiAuthor\\WebApiAuthor\\WebApiAuthor.csproj",
+  "projectFilePath": "C:\\Users\\frag-\\Documents\\WebApis-ASPNET\\Bitbucket-APIsRestFulNET\\APIsResfulNET6\\WebApiAuthor\\WebApiAuthor\\WebApiAuthor.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\frag-\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\frag-\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
