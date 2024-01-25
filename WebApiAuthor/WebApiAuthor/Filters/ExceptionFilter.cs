@@ -14,7 +14,7 @@ public class ExceptionFilter : ExceptionFilterAttribute
     public override void OnException(ExceptionContext context)
     {
         _logger.LogError(context.Exception, context.Exception.Message);
-        
+
         base.OnException(context);
     }
 }

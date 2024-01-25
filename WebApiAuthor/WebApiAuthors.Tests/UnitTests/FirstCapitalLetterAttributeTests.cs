@@ -12,23 +12,23 @@ public class FirstCapitalLetterAttributeTests
         //Preparation
         var firstCapitalLetter = new FirstCapitalLetterAttribute();
         var value = "roman";
-        var valContext = new ValidationContext(new {Name = value});
-        
+        var valContext = new ValidationContext(new { Name = value });
+
         //Execute
         var result = firstCapitalLetter.GetValidationResult(value, valContext);
 
         //Validations
         Assert.AreEqual("The first letter must be uppercase", result.ErrorMessage);
     }
-    
+
     [TestMethod]
     public void NullValue_NotReturnError()
     {
         //Preparation
         var firstCapitalLetter = new FirstCapitalLetterAttribute();
         string value = null;
-        var valContext = new ValidationContext(new {Name = value});
-        
+        var valContext = new ValidationContext(new { Name = value });
+
         //Execute
         var result = firstCapitalLetter.GetValidationResult(value, valContext);
 

@@ -12,10 +12,10 @@ using Microsoft.OpenApi.Models;
 using WebApiAuthor.Filters;
 using WebApiAuthor.Middlewares;
 using WebApiAuthor.Services;
-using WebApiAuthor.Utilities;                                            
+using WebApiAuthor.Utilities;
 
 [assembly: ApiConventionType(typeof(DefaultApiConventions))]
-namespace WebApiAuthor;     
+namespace WebApiAuthor;
 public class Startup
 {
     public Startup(IConfiguration configuration)
@@ -30,7 +30,7 @@ public class Startup
     {
         services.AddControllers(options =>
         {
-            options.Filters.Add(typeof(ExceptionFilter)); 
+            options.Filters.Add(typeof(ExceptionFilter));
             options.Conventions.Add(new SwaggerGroupVersion());
         }).AddJsonOptions
             (x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles).AddNewtonsoftJson();
@@ -53,8 +53,10 @@ public class Startup
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo {Title = "WebApisCourse",
-                Version = "v1", 
+            c.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "WebApisCourse",
+                Version = "v1",
                 Description = "Authors and Books Web Api",
                 Contact = new OpenApiContact
                 {
@@ -67,7 +69,7 @@ public class Startup
                     Name = "License: MIT"
                 }
             });
-            c.SwaggerDoc("v2", new OpenApiInfo {Title = "WebApisCourse", Version = "v2"});
+            c.SwaggerDoc("v2", new OpenApiInfo { Title = "WebApisCourse", Version = "v2" });
             c.OperationFilter<AddHATEOASParameters>();
             c.OperationFilter<AddVersionParameters>();
 
@@ -97,71 +99,71 @@ public class Startup
             var XMLFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var XMLPath = Path.Combine(AppContext.BaseDirectory, XMLFile);
             c.IncludeXmlComments(XMLPath);
-        });  
-            services.AddAutoMapper(typeof(Startup));
+        });
+        services.AddAutoMapper(typeof(Startup));
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+        services.AddIdentity<IdentityUser, IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
 
-            services.AddAuthorization(options =>
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("IsAdmin", policy =>
+                policy.RequireClaim("IsAdmin"));
+            options.AddPolicy("IsSeller", policy =>
+                policy.RequireClaim("IsSeller"));
+        });
+
+        services.AddDataProtection();
+
+        services.AddTransient<HashService>();
+
+        services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(builder =>
             {
-                options.AddPolicy("IsAdmin", policy =>
-                    policy.RequireClaim("IsAdmin"));   
-                options.AddPolicy("IsSeller", policy =>
-                    policy.RequireClaim("IsSeller"));
+                builder.WithOrigins("https://apirequest.io").AllowAnyMethod().AllowAnyHeader()
+                    .WithExposedHeaders(new string[] { "totalAmountRecords" });
             });
+        });
 
-            services.AddDataProtection();
+        services.AddTransient<LinksGenerator>();
+        services.AddTransient<HATEOASAuthorFilterAttribute>();
+        services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
-            services.AddTransient<HashService>();
-
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(builder =>
-                {
-                    builder.WithOrigins("https://apirequest.io").AllowAnyMethod().AllowAnyHeader()
-                        .WithExposedHeaders(new string[] {"totalAmountRecords"});
-                });
-            });
-
-            services.AddTransient<LinksGenerator>();
-            services.AddTransient<HATEOASAuthorFilterAttribute>();
-            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-
-            services.AddApplicationInsightsTelemetry(Configuration["ApplicationInsights:ConnectionString"]);
+        services.AddApplicationInsightsTelemetry(Configuration["ApplicationInsights:ConnectionString"]);
     }
 
     //Todos los Middleware, se ejecutan en orden. Los middleware son los que dicen "Use"
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
+    {
+        app.UseHttpLogger();
+
+        if (env.IsDevelopment())
         {
-            app.UseHttpLogger();           
+            app.UseDeveloperExceptionPage();
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-
-            }
-
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint
-                    ("/swagger/v1/swagger.json", "WebApisCourse v1");
-                c.SwaggerEndpoint
-                    ("/swagger/v2/swagger.json", "WebApisCourse v2");
-            });
-
-            //Al sacar del IF la linea 49, podriamos tenerlo en produccion
-
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseCors();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
-    }         
+
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint
+                ("/swagger/v1/swagger.json", "WebApisCourse v1");
+            c.SwaggerEndpoint
+                ("/swagger/v2/swagger.json", "WebApisCourse v2");
+        });
+
+        //Al sacar del IF la linea 49, podriamos tenerlo en produccion
+
+        app.UseHttpsRedirection();
+
+        app.UseRouting();
+
+        app.UseCors();
+
+        app.UseAuthorization();
+
+        app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+    }
+}

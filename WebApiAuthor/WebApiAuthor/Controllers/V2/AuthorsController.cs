@@ -11,7 +11,7 @@ namespace WebApiAuthor.Controllers.V2;
 
 [ApiController]
 //[Route("api/v2/authors")]  //This is the Path     
-[Route("api/authors")]     
+[Route("api/authors")]
 [AttributeHeader("x-version", "2")]
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "IsAdmin")]
 public class AuthorsController : ControllerBase
@@ -33,20 +33,20 @@ public class AuthorsController : ControllerBase
     {
         return _configuration["lastName"];
     }*/
-    
-    
+
+
     [HttpGet(Name = "getAuthorsv2")] //api/authors 
     [AllowAnonymous]
     [ServiceFilter(typeof(HATEOASAuthorFilterAttribute))]
     public async Task<ActionResult<List<AuthorDTO>>> GetAuthors() //[FromHeader] string includeHATEOAS)
-    {     
-        var authors = await _dbContext.Authors.ToListAsync();       
+    {
+        var authors = await _dbContext.Authors.ToListAsync();
         authors.ForEach(author => author.Name = author.Name.ToUpper());
-        return _mapper.Map<List<AuthorDTO>>(authors);   
-    }               
+        return _mapper.Map<List<AuthorDTO>>(authors);
+    }
 
     [HttpGet("{id:int}", Name = "getAuthorv2")]
-    [AllowAnonymous]   
+    [AllowAnonymous]
     [ServiceFilter(typeof(HATEOASAuthorFilterAttribute))]
     public async Task<ActionResult<AuthorDTOWithBooks>> GetById(int id) //, [FromHeader] string includeHATEOAS)
     {
@@ -54,20 +54,20 @@ public class AuthorsController : ControllerBase
             .Include(authorDB => authorDB.AuthorsBooks)
             .ThenInclude(authorBookDB => authorBookDB.Book)
             .FirstOrDefaultAsync(authorBD => authorBD.Id == id);
-        
-        if (author == null)  
+
+        if (author == null)
             return NotFound();
 
-        var dto = _mapper.Map<AuthorDTOWithBooks>(author);       
+        var dto = _mapper.Map<AuthorDTOWithBooks>(author);
         return dto;
-    }         
-    
-    
+    }
+
+
     [HttpGet("{name}", Name = "getAuthorByNamev2")]
     public async Task<ActionResult<List<AuthorDTO>>> GetByName([FromRoute] string name)
     {
         var authors = await _dbContext.Authors.Where
-            (authorBD => authorBD.Name.Contains(name)).ToListAsync();    
+            (authorBD => authorBD.Name.Contains(name)).ToListAsync();
 
         return _mapper.Map<List<AuthorDTO>>(authors);
     }
@@ -82,17 +82,17 @@ public class AuthorsController : ControllerBase
         }
 
         var author = _mapper.Map<Author>(authorCreationDto);
-        
+
         _dbContext.Add(author);
         await _dbContext.SaveChangesAsync();
 
         var authorDTO = _mapper.Map<AuthorDTO>(author);
-        return CreatedAtRoute("getAuthorv2", new { id = author.Id},authorDTO);
+        return CreatedAtRoute("getAuthorv2", new { id = author.Id }, authorDTO);
     }
 
     [HttpPut("{id:int}", Name = "refreshAuthorv2")] //api/authors/1
     public async Task<ActionResult> PutAuthor(AuthorCreationDTO authorCreationDto, int id)
-    {       
+    {
         var exists = await _dbContext.Authors.AnyAsync(x => x.Id == id);
         if (!exists)
             return NotFound();
@@ -109,11 +109,11 @@ public class AuthorsController : ControllerBase
     public async Task<ActionResult> DeleteAuthor(int id)
     {
         var exists = await _dbContext.Authors.AnyAsync(x => x.Id == id);
-        if (!exists)    
+        if (!exists)
             return NotFound();
 
-        _dbContext.Remove(new Author() {Id = id});
+        _dbContext.Remove(new Author() { Id = id });
         await _dbContext.SaveChangesAsync();
-        return NoContent();             
+        return NoContent();
     }
 }

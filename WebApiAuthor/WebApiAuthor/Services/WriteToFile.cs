@@ -10,7 +10,7 @@ public class WriteToFile : IHostedService
     {
         _env = env;
     }
-    
+
     public Task StartAsync(CancellationToken cancellationToken)
     {
         _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
@@ -21,8 +21,8 @@ public class WriteToFile : IHostedService
     public Task StopAsync(CancellationToken cancellationToken)
     {
         _timer.Dispose();
-       Write("Process completed");
-       return Task.CompletedTask;
+        Write("Process completed");
+        return Task.CompletedTask;
     }
 
     private void DoWork(object state)

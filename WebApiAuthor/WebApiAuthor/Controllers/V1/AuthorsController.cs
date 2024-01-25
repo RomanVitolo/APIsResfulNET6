@@ -11,7 +11,7 @@ namespace WebApiAuthor.Controllers.V1;
 
 [ApiController]
 //[Route("api/v1/authors")]  //This is the Path     
-[Route("api/authors")] 
+[Route("api/authors")]
 [AttributeHeader("x-version", "1")]
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "IsAdmin")]
 //[ApiConventionType(typeof(DefaultApiConventions))]
@@ -20,7 +20,7 @@ public class AuthorsController : ControllerBase
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
     private readonly IAuthorizationService _authorizationService;
-   
+
     public AuthorsController(ApplicationDbContext dbContext, IMapper mapper, IAuthorizationService authorizationService)
     {
         _dbContext = dbContext;
@@ -33,7 +33,7 @@ public class AuthorsController : ControllerBase
     {
         return _configuration["lastName"];
     }*/
-                                       
+
     [HttpGet(Name = "getAuthorsv1")] //api/authors 
     [AllowAnonymous]
     [ServiceFilter(typeof(HATEOASAuthorFilterAttribute))]
@@ -42,11 +42,11 @@ public class AuthorsController : ControllerBase
         var queryable = _dbContext.Authors.AsQueryable();
         await HttpContext.InsertPagingParametersInHeader(queryable);
         var authors = await queryable.OrderBy(author => author.Name).Page(pageDto).ToListAsync();
-        return _mapper.Map<List<AuthorDTO>>(authors);   
-    }               
+        return _mapper.Map<List<AuthorDTO>>(authors);
+    }
 
     [HttpGet("{id:int}", Name = "getAuthorv1")]
-    [AllowAnonymous]   
+    [AllowAnonymous]
     [ServiceFilter(typeof(HATEOASAuthorFilterAttribute))]
     [ProducesResponseType(404)]  //Puedo documentar las respuestas que mi Web Api puede retornar
     [ProducesResponseType(200)]
@@ -56,20 +56,20 @@ public class AuthorsController : ControllerBase
             .Include(authorDB => authorDB.AuthorsBooks)
             .ThenInclude(authorBookDB => authorBookDB.Book)
             .FirstOrDefaultAsync(authorBD => authorBD.Id == id);
-        
-        if (author == null)  
+
+        if (author == null)
             return NotFound();
 
-        var dto = _mapper.Map<AuthorDTOWithBooks>(author);       
+        var dto = _mapper.Map<AuthorDTOWithBooks>(author);
         return dto;
-    }         
-    
-    
+    }
+
+
     [HttpGet("{name}", Name = "getAuthorByNamev1")]
     public async Task<ActionResult<List<AuthorDTO>>> GetByName([FromRoute] string name)
     {
         var authors = await _dbContext.Authors.Where
-            (authorBD => authorBD.Name.Contains(name)).ToListAsync();    
+            (authorBD => authorBD.Name.Contains(name)).ToListAsync();
 
         return _mapper.Map<List<AuthorDTO>>(authors);
     }
@@ -84,17 +84,17 @@ public class AuthorsController : ControllerBase
         }
 
         var author = _mapper.Map<Author>(authorCreationDto);
-        
+
         _dbContext.Add(author);
         await _dbContext.SaveChangesAsync();
 
         var authorDTO = _mapper.Map<AuthorDTO>(author);
-        return CreatedAtRoute("getAuthorv1", new { id = author.Id},authorDTO);
+        return CreatedAtRoute("getAuthorv1", new { id = author.Id }, authorDTO);
     }
 
     [HttpPut("{id:int}", Name = "refreshAuthorv1")] //api/authors/1
     public async Task<ActionResult> PutAuthor(AuthorCreationDTO authorCreationDto, int id)
-    {       
+    {
         var exists = await _dbContext.Authors.AnyAsync(x => x.Id == id);
         if (!exists)
             return NotFound();
@@ -112,16 +112,16 @@ public class AuthorsController : ControllerBase
     /// </summary>
     /// <param name="id">Author ID to Delete</param>
     /// <returns></returns>
-    
+
     [HttpDelete("{id:int}", Name = "deleteAuthorv1")] //api/authors/2
     public async Task<ActionResult> DeleteAuthor(int id)
     {
         var exists = await _dbContext.Authors.AnyAsync(x => x.Id == id);
-        if (!exists)    
+        if (!exists)
             return NotFound();
 
-        _dbContext.Remove(new Author() {Id = id});
+        _dbContext.Remove(new Author() { Id = id });
         await _dbContext.SaveChangesAsync();
-        return NoContent();             
+        return NoContent();
     }
 }

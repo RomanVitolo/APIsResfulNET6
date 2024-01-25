@@ -30,19 +30,19 @@ public class AutoMapperProfiles : Profile
     {
         var result = new List<BookDTO>();
 
-        if (author.AuthorsBooks == null) 
+        if (author.AuthorsBooks == null)
             return result;
 
         foreach (var authorBook in author.AuthorsBooks)
         {
-             result.Add(new BookDTO()
-             {
-                 Id = authorBook.BookId,
-                 Title = authorBook.Book.Title
-             });
+            result.Add(new BookDTO()
+            {
+                Id = authorBook.BookId,
+                Title = authorBook.Book.Title
+            });
         }
-        
-        
+
+
         return result;
     }
 
@@ -54,7 +54,7 @@ public class AutoMapperProfiles : Profile
 
         foreach (var authorId in bookCreationDto.AuthorsIds)
         {
-           result.Add(new AuthorBook() {AuthorId = authorId}); 
+            result.Add(new AuthorBook() { AuthorId = authorId });
         }
 
         return result;
@@ -64,7 +64,7 @@ public class AutoMapperProfiles : Profile
     {
         var result = new List<AuthorDTO>();
 
-        if (book.AuthorsBooks == null)   
+        if (book.AuthorsBooks == null)
             return result;
 
         foreach (var authorBook in book.AuthorsBooks)
@@ -77,5 +77,5 @@ public class AutoMapperProfiles : Profile
         }
 
         return result;
-    } 
+    }
 }

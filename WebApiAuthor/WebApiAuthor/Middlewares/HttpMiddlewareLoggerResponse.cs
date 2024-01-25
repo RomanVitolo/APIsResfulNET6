@@ -3,45 +3,45 @@
 
 public static class HttpMiddlewareLoggerResponseExtensions
 {
-     public static IApplicationBuilder UseHttpLogger(this IApplicationBuilder app)
-     {
-          return app.UseMiddleware<HttpMiddlewareLoggerResponse>();
-     }
+    public static IApplicationBuilder UseHttpLogger(this IApplicationBuilder app)
+    {
+        return app.UseMiddleware<HttpMiddlewareLoggerResponse>();
+    }
 }
 public class HttpMiddlewareLoggerResponse
 {
-     //Logica centralizada para poder guardar todo lo que vayamos a enviar en el cuarpo de la respuesta hacia nuestros clientes
-     //Va a funcionar con cualquier ruta
-     //Esto es un middleWare personalizado
-     
-     private readonly RequestDelegate _next;
-     private readonly ILogger<HttpMiddlewareLoggerResponse> _logger;
+    //Logica centralizada para poder guardar todo lo que vayamos a enviar en el cuarpo de la respuesta hacia nuestros clientes
+    //Va a funcionar con cualquier ruta
+    //Esto es un middleWare personalizado
 
-     public HttpMiddlewareLoggerResponse(RequestDelegate next, ILogger<HttpMiddlewareLoggerResponse> logger)
-     {
-          _next = next;
-          _logger = logger;
-     }
-     
-     //Invoke or InvokeAsync
+    private readonly RequestDelegate _next;
+    private readonly ILogger<HttpMiddlewareLoggerResponse> _logger;
 
-     public async Task InvokeAsync(HttpContext context)
-     {
-          using (var ms = new MemoryStream())
-          {
-               var originalBodyResponse = context.Response.Body;
-               context.Response.Body = ms;
+    public HttpMiddlewareLoggerResponse(RequestDelegate next, ILogger<HttpMiddlewareLoggerResponse> logger)
+    {
+        _next = next;
+        _logger = logger;
+    }
 
-               await _next(context);
+    //Invoke or InvokeAsync
 
-               ms.Seek(0, SeekOrigin.Begin);
-               string response = new StreamReader(ms).ReadToEnd();
-               ms.Seek(0, SeekOrigin.Begin);
+    public async Task InvokeAsync(HttpContext context)
+    {
+        using (var ms = new MemoryStream())
+        {
+            var originalBodyResponse = context.Response.Body;
+            context.Response.Body = ms;
 
-               await ms.CopyToAsync(originalBodyResponse);
-               context.Response.Body = originalBodyResponse;
+            await _next(context);
 
-               _logger.LogInformation(response);
-          }
-     }
+            ms.Seek(0, SeekOrigin.Begin);
+            string response = new StreamReader(ms).ReadToEnd();
+            ms.Seek(0, SeekOrigin.Begin);
+
+            await ms.CopyToAsync(originalBodyResponse);
+            context.Response.Body = originalBodyResponse;
+
+            _logger.LogInformation(response);
+        }
+    }
 }

@@ -25,7 +25,7 @@ public class RootControllerTests
         //Validation
         Assert.AreEqual(4, result.Value.Count());
     }
-    
+
     [TestMethod]
     public async Task IfUserIsNotAdmin_Get2Links()
     {
@@ -34,14 +34,14 @@ public class RootControllerTests
         authorizationService.Result = AuthorizationResult.Failed();
         var rootController = new RootController(authorizationService);
         rootController.Url = new URLHelperMock();
-                                                                         
+
         //Execute
         var result = await rootController.Get();
 
         //Validation
         Assert.AreEqual(2, result.Value.Count());
     }
-    
+
     [TestMethod]      //Moq Library NugetPackage
     public async Task IfUserIsNotAdmin_Get2Links_UsingMoq()
     {
@@ -50,20 +50,20 @@ public class RootControllerTests
         mockAuthorizationService.Setup(x => x.AuthorizeAsync(It.IsAny<ClaimsPrincipal>(),
             It.IsAny<object>(),
             It.IsAny<IEnumerable<IAuthorizationRequirement>>()))
-            .Returns(Task.FromResult(AuthorizationResult.Failed()));        
-            
+            .Returns(Task.FromResult(AuthorizationResult.Failed()));
+
         mockAuthorizationService.Setup(x => x.AuthorizeAsync(It.IsAny<ClaimsPrincipal>(),
                 It.IsAny<object>(),
                 It.IsAny<string>()))
-            .Returns(Task.FromResult(AuthorizationResult.Failed()));    
+            .Returns(Task.FromResult(AuthorizationResult.Failed()));
 
         var mockURLHelper = new Mock<IUrlHelper>();
         mockURLHelper.Setup(x => x.Link(It.IsAny<string>(), It.IsAny<object>()))
             .Returns(string.Empty);
-        
+
         var rootController = new RootController(mockAuthorizationService.Object);
         rootController.Url = mockURLHelper.Object;
-                                                                         
+
         //Execute
         var result = await rootController.Get();
 

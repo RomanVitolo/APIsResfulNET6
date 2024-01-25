@@ -12,7 +12,7 @@ public class AttributeHeader : Attribute, IActionConstraint
         _header = header;
         _value = value;
     }
-    
+
     public bool Accept(ActionConstraintContext context)
     {
         var headers = context.RouteContext.HttpContext.Request.Headers;

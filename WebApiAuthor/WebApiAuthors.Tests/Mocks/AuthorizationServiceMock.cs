@@ -6,7 +6,7 @@ namespace WebApiAuthors.Tests.Mocks;
 public class AuthorizationServiceMock : IAuthorizationService
 {
     public AuthorizationResult Result { get; set; }
-    
+
     public Task<AuthorizationResult> AuthorizeAsync(ClaimsPrincipal user, object? resource,
         IEnumerable<IAuthorizationRequirement> requirements)
     {

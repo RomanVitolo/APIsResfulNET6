@@ -8,17 +8,18 @@ public class ApplicationDbContext : IdentityDbContext
 {
     public ApplicationDbContext(DbContextOptions options) : base(options)
     {
-        
+
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-       base.OnModelCreating(modelBuilder);
+        base.OnModelCreating(modelBuilder);
 
-       modelBuilder.Entity<AuthorBook>().HasKey(al => new
-       {
-           al.AuthorId, al.BookId
-       });
+        modelBuilder.Entity<AuthorBook>().HasKey(al => new
+        {
+            al.AuthorId,
+            al.BookId
+        });
     }
 
     public DbSet<Author> Authors { get; set; }    //Create a table from this Scheme

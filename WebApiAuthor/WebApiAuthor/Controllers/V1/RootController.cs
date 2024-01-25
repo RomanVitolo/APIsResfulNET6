@@ -15,31 +15,31 @@ public class RootController : ControllerBase
     public RootController(IAuthorizationService authorizationService)
     {
         _authorizationService = authorizationService;
-    }       
-    
+    }
+
     [HttpGet(Name = "getRoot")]
     [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<HATEOASDate>>> Get()
     {
         var hateoasDate = new List<HATEOASDate>();
 
-        var isAdmin = await _authorizationService.AuthorizeAsync(User, "isAdmin"); 
-        
-        hateoasDate.Add(new HATEOASDate(link: Url.Link("getRoot", new {}),
-            description: "self",method: "GET" ));
+        var isAdmin = await _authorizationService.AuthorizeAsync(User, "isAdmin");
 
-        hateoasDate.Add(new HATEOASDate(link: Url.Link("getAuthors", new{}),
+        hateoasDate.Add(new HATEOASDate(link: Url.Link("getRoot", new { }),
+            description: "self", method: "GET"));
+
+        hateoasDate.Add(new HATEOASDate(link: Url.Link("getAuthors", new { }),
             description: "authors", method: "GET"));
 
         if (isAdmin.Succeeded)
         {
-            hateoasDate.Add(new HATEOASDate(link: Url.Link("createAuthor", new{}),
+            hateoasDate.Add(new HATEOASDate(link: Url.Link("createAuthor", new { }),
                 description: "create-author", method: "POST"));
-        
-            hateoasDate.Add(new HATEOASDate(link: Url.Link("createBook", new{}),
+
+            hateoasDate.Add(new HATEOASDate(link: Url.Link("createBook", new { }),
                 description: "create-book", method: "POST"));
-        }            
-        
+        }
+
         return hateoasDate;
     }
 }

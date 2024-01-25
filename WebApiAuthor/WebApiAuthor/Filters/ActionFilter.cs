@@ -10,14 +10,14 @@ public class ActionFilter : IActionFilter
     {
         _logger = logger;
     }
-    
+
     public void OnActionExecuted(ActionExecutedContext context)
     {
         _logger.LogInformation("After execute the Action");
     }
-    
+
     public void OnActionExecuting(ActionExecutingContext context)
     {
         _logger.LogInformation("Before execute the Action");
-    }            
+    }
 }

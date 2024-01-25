@@ -32,25 +32,25 @@ public class LinksGenerator
         var result = await _authorizationService.AuthorizeAsync(httpContext.User, "isAdmin");
         return result.Succeeded;
     }
-    
+
     public async Task LinkGenerator(AuthorDTO authorDto)
     {
         var isAdmin = await IsAdmin();
         var Url = BuildUrlHelper();
-        
-        authorDto.Links.Add(new HATEOASDate(link: Url.Link("getAuthor", 
-                new {id = authorDto.Id}),
+
+        authorDto.Links.Add(new HATEOASDate(link: Url.Link("getAuthor",
+                new { id = authorDto.Id }),
             description: "self", method: "GET"));
 
         if (isAdmin)
         {
-            authorDto.Links.Add(new HATEOASDate(link: Url.Link("refreshAuthor", 
-                    new {id = authorDto.Id}),
+            authorDto.Links.Add(new HATEOASDate(link: Url.Link("refreshAuthor",
+                    new { id = authorDto.Id }),
                 description: "refresh-author", method: "PUT"));
-        
-            authorDto.Links.Add(new HATEOASDate(link: Url.Link("deleteAuthor", 
-                    new {id = authorDto.Id}),
+
+            authorDto.Links.Add(new HATEOASDate(link: Url.Link("deleteAuthor",
+                    new { id = authorDto.Id }),
                 description: "delete-author", method: "DELETE"));
-        }        
+        }
     }
 }
