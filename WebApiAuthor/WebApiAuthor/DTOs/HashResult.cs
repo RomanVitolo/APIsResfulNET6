@@ -1,7 +1,9 @@
-﻿namespace WebApiAuthor.DTOs;
-
-public class HashResult
+﻿namespace WebApiAuthor.DTOs
 {
-    public string Hash { get; set; }
-    public byte[] Sal { get; set; }
+    public class HashResult
+    {
+        public string Hash { get; set; }
+        public byte[] Sal { get; set; }
+    }
 }
+

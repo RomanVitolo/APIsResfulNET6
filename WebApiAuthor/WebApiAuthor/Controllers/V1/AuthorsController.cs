@@ -7,8 +7,9 @@ using WebApiAuthor.DTOs;
 using WebApiAuthor.Entities;
 using WebApiAuthor.Utilities;
 
-namespace WebApiAuthor.Controllers.V1;
-
+namespace WebApiAuthor.Controllers.V1
+{
+    
 [ApiController]
 //[Route("api/v1/authors")]  //This is the Path     
 [Route("api/authors")]
@@ -124,4 +125,5 @@ public class AuthorsController : ControllerBase
         await _dbContext.SaveChangesAsync();
         return NoContent();
     }
+}
 }

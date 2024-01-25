@@ -2,9 +2,9 @@
 using WebApiAuthor.DTOs;
 using WebApiAuthor.Entities;
 
-namespace WebApiAuthor.Utilities;
-
-public class AutoMapperProfiles : Profile
+namespace WebApiAuthor.Utilities
+{
+    public class AutoMapperProfiles : Profile
 {
     public AutoMapperProfiles()
     {
@@ -79,3 +79,5 @@ public class AutoMapperProfiles : Profile
         return result;
     }
 }
+}
+

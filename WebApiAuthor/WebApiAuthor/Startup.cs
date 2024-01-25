@@ -15,8 +15,10 @@ using WebApiAuthor.Services;
 using WebApiAuthor.Utilities;
 
 [assembly: ApiConventionType(typeof(DefaultApiConventions))]
-namespace WebApiAuthor;
-public class Startup
+
+namespace WebApiAuthor
+{
+    public class Startup
 {
     public Startup(IConfiguration configuration)
     {
@@ -166,4 +168,5 @@ public class Startup
 
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
     }
+}
 }

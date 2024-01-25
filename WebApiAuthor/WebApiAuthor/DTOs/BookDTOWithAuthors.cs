@@ -1,6 +1,8 @@
-﻿namespace WebApiAuthor.DTOs;
-
-public class BookDTOWithAuthors : BookDTO
+﻿namespace WebApiAuthor.DTOs
 {
-    public List<AuthorDTO> Authors { get; set; }
+    public class BookDTOWithAuthors : BookDTO
+    {
+        public List<AuthorDTO> Authors { get; set; }
+    }
 }
+

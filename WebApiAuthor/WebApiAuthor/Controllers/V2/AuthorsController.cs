@@ -7,9 +7,9 @@ using WebApiAuthor.DTOs;
 using WebApiAuthor.Entities;
 using WebApiAuthor.Utilities;
 
-namespace WebApiAuthor.Controllers.V2;
-
-[ApiController]
+namespace WebApiAuthor.Controllers.V2
+{
+    [ApiController]
 //[Route("api/v2/authors")]  //This is the Path     
 [Route("api/authors")]
 [AttributeHeader("x-version", "2")]
@@ -117,3 +117,5 @@ public class AuthorsController : ControllerBase
         return NoContent();
     }
 }
+}
+

@@ -1,6 +1,8 @@
-﻿namespace WebApiAuthor.DTOs;
-
-public class Resource
+﻿namespace WebApiAuthor.DTOs
 {
-    public List<HATEOASDate> Links { get; set; } = new List<HATEOASDate>();
+    public class Resource
+    {
+        public List<HATEOASDate> Links { get; set; } = new List<HATEOASDate>();
+    }
 }
+

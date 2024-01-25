@@ -1,18 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace WebApiAuthor.Utilities;
-
-public static class HTTPContextExtensions
+namespace WebApiAuthor.Utilities
 {
-    public async static Task InsertPagingParametersInHeader<T>(this HttpContext httpContext,
-       IQueryable<T> queryable)
+    public static class HTTPContextExtensions
     {
-        if (httpContext == null)
+        public async static Task InsertPagingParametersInHeader<T>(this HttpContext httpContext,
+            IQueryable<T> queryable)
         {
-            throw new ArgumentNullException(nameof(httpContext));
-        }
+            if (httpContext == null)
+            {
+                throw new ArgumentNullException(nameof(httpContext));
+            }
 
-        double amount = await queryable.CountAsync();
-        httpContext.Response.Headers.Add("totalAmountRecords", amount.ToString());
+            double amount = await queryable.CountAsync();
+            httpContext.Response.Headers.Add("totalAmountRecords", amount.ToString());
+        }
     }
 }
+
+

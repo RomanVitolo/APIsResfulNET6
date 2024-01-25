@@ -8,9 +8,9 @@ using WebApiAuthor.DTOs;
 using WebApiAuthor.Entities;
 using WebApiAuthor.Utilities;
 
-namespace WebApiAuthor.Controllers.V1;
-
-[ApiController]
+namespace WebApiAuthor.Controllers.V1
+{
+    [ApiController]
 [Route("api/v1/books/{bookId:int}/comments")]
 public class CommentsController : ControllerBase
 {
@@ -98,3 +98,5 @@ public class CommentsController : ControllerBase
         return NoContent();
     }
 }
+}
+

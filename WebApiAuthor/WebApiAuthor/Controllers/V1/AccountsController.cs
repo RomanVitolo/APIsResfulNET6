@@ -11,9 +11,9 @@ using Microsoft.IdentityModel.Tokens;
 using WebApiAuthor.DTOs;
 using WebApiAuthor.Services;
 
-namespace WebApiAuthor.Controllers.V1;
-
-[ApiController]
+namespace WebApiAuthor.Controllers.V1
+{
+    [ApiController]
 [Route("api/v1/accounts")]
 public class AccountsController : ControllerBase
 {
@@ -174,3 +174,5 @@ public class AccountsController : ControllerBase
         return NoContent();
     }
 }
+}
+

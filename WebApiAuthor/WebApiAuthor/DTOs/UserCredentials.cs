@@ -1,11 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApiAuthor.DTOs;
-
-public class UserCredentials
+namespace WebApiAuthor.DTOs
 {
-    [Required]
-    public string Email { get; set; }
-    [Required]
-    public string Password { get; set; }
+    public class UserCredentials
+    {
+        [Required]
+        public string Email { get; set; }
+        [Required]
+        public string Password { get; set; }
+    }
 }
+

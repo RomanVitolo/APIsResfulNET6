@@ -1,6 +1,8 @@
-﻿namespace WebApiAuthor.DTOs;
-
-public class CommentCreationDTO
+﻿namespace WebApiAuthor.DTOs
 {
-    public string Content { get; set; }
+    public class CommentCreationDTO
+    {
+        public string Content { get; set; }
+    }
 }
+

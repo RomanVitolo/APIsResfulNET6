@@ -5,9 +5,10 @@ using Moq;
 using WebApiAuthor.Controllers.V1;
 using WebApiAuthors.Tests.Mocks;
 
-namespace WebApiAuthors.Tests.UnitTests;
-
-[TestClass]
+namespace WebApiAuthors.Tests.UnitTests
+{ 
+    
+    [TestClass]
 public class RootControllerTests
 {
     [TestMethod]
@@ -70,4 +71,5 @@ public class RootControllerTests
         //Validation
         Assert.AreEqual(2, result.Value.Count());
     }
+}
 }

@@ -1,47 +1,49 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace WebApiAuthor.Utilities;
-
-public class HATEOASFilterAttribute : ResultFilterAttribute
+namespace WebApiAuthor.Utilities
 {
-    protected bool MustIncludeHATEOAS(ResultExecutingContext context)
+    public class HATEOASFilterAttribute : ResultFilterAttribute
     {
-        var result = context.Result as ObjectResult;
-
-        if (!IsSuccessfulResponse(result))
+        protected bool MustIncludeHATEOAS(ResultExecutingContext context)
         {
-            return false;
+            var result = context.Result as ObjectResult;
+
+            if (!IsSuccessfulResponse(result))
+            {
+                return false;
+            }
+
+            var header = context.HttpContext.Request.Headers["includeHATEOAS"];
+            if (header.Count == 0)
+            {
+                return false;
+            }
+
+            var value = header[0];
+
+            if (!value.Equals("Y", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return false;
+            }
+
+            return true;
         }
 
-        var header = context.HttpContext.Request.Headers["includeHATEOAS"];
-        if (header.Count == 0)
+        private bool IsSuccessfulResponse(ObjectResult result)
         {
-            return false;
+            if (result == null || result.Value == null)
+            {
+                return false;
+            }
+
+            if (result.StatusCode.HasValue && !result.StatusCode.Value.ToString().StartsWith("2"))
+            {
+                return false;  //Los codigos de Status 200 son los exitosos
+            }
+
+            return true;
         }
-
-        var value = header[0];
-
-        if (!value.Equals("Y", StringComparison.InvariantCultureIgnoreCase))
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    private bool IsSuccessfulResponse(ObjectResult result)
-    {
-        if (result == null || result.Value == null)
-        {
-            return false;
-        }
-
-        if (result.StatusCode.HasValue && !result.StatusCode.Value.ToString().StartsWith("2"))
-        {
-            return false;  //Los codigos de Status 200 son los exitosos
-        }
-
-        return true;
     }
 }
+

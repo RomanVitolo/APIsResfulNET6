@@ -1,23 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace WebApiAuthor.Filters;
-
-public class ActionFilter : IActionFilter
+namespace WebApiAuthor.Filters
 {
-    private readonly ILogger<ActionFilter> _logger;
-
-    public ActionFilter(ILogger<ActionFilter> logger)
+    public class ActionFilter : IActionFilter
     {
-        _logger = logger;
-    }
+        private readonly ILogger<ActionFilter> _logger;
 
-    public void OnActionExecuted(ActionExecutedContext context)
-    {
-        _logger.LogInformation("After execute the Action");
-    }
+        public ActionFilter(ILogger<ActionFilter> logger)
+        {
+            _logger = logger;
+        }
 
-    public void OnActionExecuting(ActionExecutingContext context)
-    {
-        _logger.LogInformation("Before execute the Action");
+        public void OnActionExecuted(ActionExecutedContext context)
+        {
+            _logger.LogInformation("After execute the Action");
+        }
+
+        public void OnActionExecuting(ActionExecutingContext context)
+        {
+            _logger.LogInformation("Before execute the Action");
+        }
     }
 }
+

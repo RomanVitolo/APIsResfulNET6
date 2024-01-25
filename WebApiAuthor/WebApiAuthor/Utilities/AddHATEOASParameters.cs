@@ -1,25 +1,27 @@
 ﻿using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace WebApiAuthor.Utilities;
-
-public class AddHATEOASParameters : IOperationFilter
+namespace WebApiAuthor.Utilities
 {
-    public void Apply(OpenApiOperation operation, OperationFilterContext context)
+    public class AddHATEOASParameters : IOperationFilter
     {
-        if (context.ApiDescription.HttpMethod != "GET")
-            return;
-
-        if (operation.Parameters == null)
+        public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            operation.Parameters = new List<OpenApiParameter>();
+            if (context.ApiDescription.HttpMethod != "GET")
+                return;
+
+            if (operation.Parameters == null)
+            {
+                operation.Parameters = new List<OpenApiParameter>();
+            }
+
+            operation.Parameters.Add(new OpenApiParameter
+            {
+                Name = "includeHATEOAS",
+                In = ParameterLocation.Header,
+                Required = false
+            });
         }
-
-        operation.Parameters.Add(new OpenApiParameter
-        {
-            Name = "includeHATEOAS",
-            In = ParameterLocation.Header,
-            Required = false
-        });
     }
 }
+

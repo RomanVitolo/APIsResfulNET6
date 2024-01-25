@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApiAuthor.DTOs;
-
-public class EditAdminDTO
+namespace WebApiAuthor.DTOs
 {
-    [Required]
-    [EmailAddress]
-    public string Email { get; set; }
+    public class EditAdminDTO
+    {
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+    }
 }
+

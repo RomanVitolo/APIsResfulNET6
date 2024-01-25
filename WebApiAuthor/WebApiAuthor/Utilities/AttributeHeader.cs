@@ -1,28 +1,30 @@
 ﻿using Microsoft.AspNetCore.Mvc.ActionConstraints;
 
-namespace WebApiAuthor.Utilities;
-
-public class AttributeHeader : Attribute, IActionConstraint
+namespace WebApiAuthor.Utilities
 {
-    private readonly string _header;
-    private readonly string _value;
-
-    public AttributeHeader(string header, string value)
+    public class AttributeHeader : Attribute, IActionConstraint
     {
-        _header = header;
-        _value = value;
-    }
+        private readonly string _header;
+        private readonly string _value;
 
-    public bool Accept(ActionConstraintContext context)
-    {
-        var headers = context.RouteContext.HttpContext.Request.Headers;
-        if (!headers.ContainsKey(_header))
+        public AttributeHeader(string header, string value)
         {
-            return false;
+            _header = header;
+            _value = value;
         }
 
-        return string.Equals(headers[_header], _value, StringComparison.OrdinalIgnoreCase);
-    }
+        public bool Accept(ActionConstraintContext context)
+        {
+            var headers = context.RouteContext.HttpContext.Request.Headers;
+            if (!headers.ContainsKey(_header))
+            {
+                return false;
+            }
 
-    public int Order => 0;
+            return string.Equals(headers[_header], _value, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public int Order => 0;
+    }
 }
+

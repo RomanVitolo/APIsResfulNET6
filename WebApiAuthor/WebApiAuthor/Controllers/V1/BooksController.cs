@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using WebApiAuthor.DTOs;
 using WebApiAuthor.Entities;
 
-namespace WebApiAuthor.Controllers.V1;
-
-[ApiController]
+namespace WebApiAuthor.Controllers.V1
+{
+    [ApiController]
 [Route("api/v1/Books")]
 public class BooksController : ControllerBase
 {
@@ -120,3 +120,5 @@ public class BooksController : ControllerBase
         }
     }
 }
+}
+

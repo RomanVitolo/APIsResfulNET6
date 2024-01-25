@@ -1,7 +1,9 @@
-﻿namespace WebApiAuthor.DTOs;
-
-public class AuthenticationResponse
+﻿namespace WebApiAuthor.DTOs
 {
-    public string Token { get; set; }
-    public DateTime ExpirationTime { get; set; }
+    public class AuthenticationResponse
+    {
+        public string Token { get; set; }
+        public DateTime ExpirationTime { get; set; }
+    }
 }
+
