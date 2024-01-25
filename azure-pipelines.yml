@@ -12,14 +12,13 @@ jobs:
 - job: Build
   displayName: 'Build Job'
   steps:
-  - script: echo 'Debug information before installing ASP.NET Core 6 Preview SDK'
+  - script: echo 'Debug information before installing .NET 6 SDK'
   
   - task: UseDotNet@2
-    displayName: 'Installing Preview ASP.NET Core 6'
+    displayName: 'Installing .NET 6 SDK'
     inputs:
       packageType: 'sdk'
-      version: '6.0.100-preview.4.21255.9'
-      includePreviewVersions: true
+      version: '6.x'
 
   - script: echo 'Debug information before dotnet build'
   
