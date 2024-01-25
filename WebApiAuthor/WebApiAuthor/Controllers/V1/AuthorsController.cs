@@ -20,8 +20,7 @@ public class AuthorsController : ControllerBase
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
     private readonly IAuthorizationService _authorizationService;
-    private readonly ILogger<AuthorsController> _logger;
-
+   
     public AuthorsController(ApplicationDbContext dbContext, IMapper mapper, IAuthorizationService authorizationService)
     {
         _dbContext = dbContext;
