@@ -1,0 +1,52 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  proyecto: 'WebApiAuthor/WebApiAuthor/WebApiAuthor.csproj'
+
+jobs:
+- job: Build
+  displayName: 'Build Job'
+  steps:
+  - script: echo 'Debug information before installing ASP.NET Core 6 Preview SDK'
+  
+  - task: UseDotNet@2
+    displayName: 'Installing Preview ASP.NET Core 6'
+    inputs:
+      packageType: 'sdk'
+      version: '6.0.100-preview.4.21255.9'
+      includePreviewVersions: true
+
+  - script: echo 'Debug information before dotnet build'
+  
+  - script: dotnet build --configuration $(buildConfiguration) $(proyecto)
+    displayName: 'dotnet build $(buildConfiguration)'
+  
+  - script: echo 'Debug information after dotnet build'
+
+  - task: CmdLine@2
+    displayName: 'Installing EF Core CLI'
+    inputs:
+      script: 'dotnet tool install --global dotnet-ef'
+  
+  - task: CmdLine@2
+    displayName: 'Generating DB script'
+    inputs:
+      script: 'dotnet ef migrations script -i -o $(Build.ArtifactStagingDirectory)\migrate.sql --project $(proyecto)'
+  
+  - task: DotNetCoreCLI@2
+    displayName: 'Publishing App...'
+    inputs:
+      command: 'publish'
+      publishWebProjects: false
+      projects: $(proyecto)
+      arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory) --runtime win-x64 --self-contained'
+      zipAfterPublish: false
+      modifyOutputPath: false
+  
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publishing artifacts'
