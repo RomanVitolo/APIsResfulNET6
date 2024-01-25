@@ -30,7 +30,7 @@ jobs:
   - task: CmdLine@2
     displayName: 'Installing EF Core CLI'
     inputs:
-      script: 'dotnet tool install --global dotnet-ef'
+      script: 'dotnet tool install --global dotnet-ef --version 6.0.0'
   
   - task: CmdLine@2
     displayName: 'Generating DB script'
