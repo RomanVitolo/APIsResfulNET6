@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAOccEPqxIN0urJrIJ4Q98ZwAAAAACAAAAAAAQZgAAAAEAACAAAAA4XlSVRCQb6FqI2nueLJ2NFO1IK6ZtAD7tI81+MHkEFwAAAAAOgAAAAAIAACAAAAC42Hj963AhyC8Ev90TkHbbgu3uHb7Sch1t0OBVt2GEKoAAAACbLl1HOMfWaQV+kuVB9jB8DjeHHl3WifqKqbrFE766ueW8a/HTk49p2cGdKTQdZlxw82YEBac6CAaCEX0lnQ38MNgs+ywZne/l7HXfXgVT6P6ntlRnvgUAHZp2ilKwQI60b2mLn8UkdcF1+y6rS4zNhDzY3UUHT3XTEYIrqcZoU0AAAAATJZSZNsDbM2fpNglOty7Ax9Y1spJ/eqThoOVLGbL0GO5i51MrIl3bGWFiRGmiC8A8TTGBJ+XNk1JbmU7yiztG</EncryptedPassword>
+    <History>True|2024-01-25T17:37:56.8606593Z;True|2024-01-25T13:21:32.1775244-03:00;True|2024-01-25T13:05:54.3738715-03:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <EFMigrations Include="WebApiAuthor.ApplicationDbContext">
+      <Value>Data Source=webapiauthordbserver.database.windows.net,1433%3bInitial Catalog=WebApiAuthor_db%3bUser ID=rvitolo%3bPassword=TrickGaming123</Value>
+    </EFMigrations>
+  </ItemGroup>
+</Project>

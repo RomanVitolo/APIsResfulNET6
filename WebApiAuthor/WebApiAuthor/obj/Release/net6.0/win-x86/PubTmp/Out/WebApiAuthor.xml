@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebApiAuthor</name>
+    </assembly>
+    <members>
+        <member name="M:WebApiAuthor.Controllers.V1.AuthorsController.DeleteAuthor(System.Int32)">
+            <summary>
+             Delete an Author
+            </summary>
+            <param name="id">Author ID to Delete</param>
+            <returns></returns>
+        </member>
+        <member name="T:WebApiAuthor.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:WebApiAuthor.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:WebApiAuthor.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+    </members>
+</doc>

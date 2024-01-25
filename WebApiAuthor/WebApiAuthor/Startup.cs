@@ -128,6 +128,8 @@ public class Startup
             services.AddTransient<LinksGenerator>();
             services.AddTransient<HATEOASAuthorFilterAttribute>();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+            services.AddApplicationInsightsTelemetry(Configuration["ApplicationInsights:ConnectionString"]);
     }
 
     //Todos los Middleware, se ejecutan en orden. Los middleware son los que dicen "Use"
