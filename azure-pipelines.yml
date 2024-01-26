@@ -1,4 +1,8 @@
 trigger:
+- task: AzureMysqlDeployment@1
+  inputs:
+    TaskNameSelector: 'SqlTaskFile'
+    IpDetectionMethod: 'AutoDetect'
 - main
 
 pool:
